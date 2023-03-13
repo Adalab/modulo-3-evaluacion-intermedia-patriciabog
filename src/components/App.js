@@ -81,7 +81,12 @@ const handleFilterCharacter = (ev => {
             onInput={handleFilterCharacter}
             value={searchCharacter}
             >
-              <option value=""></option>
+              <option value="Todos">Todos</option>
+              <option value="Ross">Ross</option>
+              <option value="Joey">Joey</option>
+              <option value="Phoeb">Phoeb</option>
+              <option value="Phoeb">Chandler</option>
+              <option value="Phoeb">Rachel</option>
             </select>
             
         </form>
