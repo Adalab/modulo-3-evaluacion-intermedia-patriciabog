@@ -2,6 +2,8 @@ import '../styles/App.scss';
 import phrases from'../data/phrases.json';
 import { useState } from 'react';
 import ls from '../services/localstorage';
+import friends from '../images/friends.jpg';
+
 
 
 function App() {
@@ -65,7 +67,8 @@ const handleFilterCharacter = (ev => {
     <div className="page">
       {/* header filtro */}
       <header className="header">
-         <h1 className="header__title">Frases de Friends</h1>
+         <h1 className="header__title">Frases de Friends </h1>
+         <img src={friends} alt="friends" className='img' />
          <form className='form'>
            <label htmlFor="" className='form__quote-filter'>Filtrar por frases</label>
            <input
