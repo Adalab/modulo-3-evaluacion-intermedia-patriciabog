@@ -1,16 +1,20 @@
 import '../styles/App.scss';
 import phrases from'../data/phrases.json';
 import { useState } from 'react';
+import ls from '../services/localstorage';
 
 
 function App() {
 
   const [data, setData] = useState(phrases);    
   const [searchQuote, setSearchQuote] = useState("");
-  const [searchCharacter, setSearchCharacter] = useState("");
-  const [newPhrase, setNewPhrase] = useState('');
+  const [searchCharacter, setSearchCharacter] = useState("all");
+  const [newPhrase, setNewPhrase] = useState({
+    quote:'',
+    character: '',
+    });
 
-//con una variable
+//con una funcion
   const renderList = () => {
      return data
       .filter((phrase) => {
@@ -27,26 +31,28 @@ function App() {
       })
      
       .map((eachPhrase, i) => (
-     <li className='list' key={i}> 
-     <p> {eachPhrase.quote} </p>
-      <span>{eachPhrase.character}</span>
-     </li>
-  ));
-  }
-
- 
+         <li className='list' key={i}> 
+            <p> {eachPhrase.quote} </p>
+            <span className='list__chraracter'>{eachPhrase.character}</span>
+         </li>
+      ));
+   }
 
   const handleNewPhrase = (ev) => {
-    //spread operator
+ //spread operator
     setNewPhrase({...newPhrase, [ev.target.id]: ev.target.value});
   }
-//funcion handleclick
+
+ //funcion handleclick
   const handleClick = (ev) => {
-    ev.preventDefault();
-    setData([...data, newPhrase]);
+     ev.preventDefault();
+     setData([...data, newPhrase]);
+     setNewPhrase({quote:'', character:''});
   }
+
 //funcion filtro
 const hadleFilterQuote = (ev => {
+  ls.set('searchQuote', ev.target.value);
   setSearchQuote(ev.target.value);
 });
 
@@ -59,63 +65,59 @@ const handleFilterCharacter = (ev => {
     <div className="page">
       {/* header filtro */}
       <header className="header">
-          <h1 className="header__title">Frases de Friends</h1>
-        <form className='form'>
+         <h1 className="header__title">Frases de Friends</h1>
+         <form className='form'>
+           <label htmlFor="" className='form__quote-filter'>Filtrar por frases</label>
+           <input
+             className="form__search"
+             type="text"
+             name="quote"
+             id='quote'
+             onInput={hadleFilterQuote}
+             value={searchQuote}
+            />
 
-          <label htmlFor="form__quote-filter">Filtrar por frases</label>
-          <input
-            className="form__search"
-            type="text"
-            name="search-quote"
-            id='search-quote'
-            onInput={hadleFilterQuote}
-            value={searchQuote}
-
-          />
-
-          <label htmlFor="caracter-filter">Filtrar por personaje</label>
+           <label htmlFor="" className='form__character-filter'>Filtrar por  personaje</label>
            <select  className="form__search"
-            type="search"
-            name="character"
-            id='character'
-            onInput={handleFilterCharacter}
-            value={searchCharacter}
+             type="search"
+             name="character"
+             id='character'
+             onInput={handleFilterCharacter}
+             value={searchCharacter}
             >
-              <option value="Todos">Todos</option>
-              <option value="Ross">Ross</option>
-              <option value="Joey">Joey</option>
-              <option value="Phoeb">Phoeb</option>
-              <option value="Phoeb">Chandler</option>
-              <option value="Phoeb">Rachel</option>
-            </select>
-            
-        </form>
+             <option value="Todos">Todos</option>
+             <option value="Ross">Ross</option>
+             <option value="Joey">Joey</option>
+             <option value="Phoeb">Phoeb</option>
+             <option value="Chandler">Chandler</option>
+             <option value="Rachel">Rachel</option>
+           </select>
+         </form>
       </header>
 
       <main>
-        {/* contact list */}
-        <ul className="main__quotes">
-        {renderList()}
+         {/* contact list */}
+         <ul className="main__quotes">
+         {renderList()}
          
-        </ul>
+         </ul>
 
-        {/* new Phrase */}
-        <form className="new-contact__form">
-          <h2 className="new-contact__title">Añadir una nueva frase</h2>
-          <label htmlFor="">Frase:</label>
-          <input
-            className="new-contact__input"
+         {/* new Phrase */}
+         <form className="new-phrase">
+           <h2 className="new-phrase__title">Añadir una nueva frase</h2>
+           <label htmlFor="">Frase:</label>
+           <input
+            className="new-phrase__input"
             type="text"
             name="quote"
             id="quote"
             placeholder='Ej. Unaji!'
             onInput={handleNewPhrase}
             value={newPhrase.quote}
-
-          />
+           />
           <label htmlFor="">Paersonaje:</label>
           <input
-            className="new-contact__input"
+            className="new-phrase__input"
             type='text'
             name="character"
             id="character"
@@ -123,7 +125,12 @@ const handleFilterCharacter = (ev => {
             onInput={handleNewPhrase}
             value={newPhrase.character}
           />
-          <input className="new-contact__btn" type="submit" value="Añadir nueva frase" onClick={handleClick} />
+          <input 
+          className="new-phrase__btn" 
+          type="submit" 
+          value="Añadir nueva frase" 
+          onClick={handleClick} 
+          />
         </form>
       </main>
     </div>
